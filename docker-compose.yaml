@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfiles/Dockerfile.frontend
     ports:
-      - "8080:3000"
+      - "8080:80"
 
   backend:
     env_file:

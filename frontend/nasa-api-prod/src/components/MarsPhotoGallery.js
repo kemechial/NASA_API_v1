@@ -27,7 +27,7 @@ const MarsPhotoGallery = () => {
       };
 
       try {
-        const response = await axios.get(`/mars-photos/${params.roverName}`, { params });
+        const response = await axios.get(`/api/mars-photos/${params.roverName}`, { params });
         setPhotos(response.data.photos || []);
       } catch (error) {
         console.error('Error fetching photos:', error);
