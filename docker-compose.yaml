@@ -1,0 +1,14 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfiles/Dockerfile.frontend
+    ports:
+      - "8080:3000"
+
+  backend:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfiles/Dockerfile.backend

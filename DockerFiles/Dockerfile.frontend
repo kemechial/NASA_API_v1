@@ -1,0 +1,23 @@
+# Use a node image for building the frontend
+FROM node:14 AS build
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the frontend code
+COPY frontend/nasa-api-prod/package*.json ./
+RUN npm install
+COPY frontend/nasa-api-prod .
+
+# Build the frontend
+RUN npm run build
+
+# Use a lightweight web server to serve the frontend
+FROM nginx:alpine
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Start Nginx server
+CMD ["nginx", "-g", "daemon off;"]

@@ -1,0 +1,18 @@
+/* src/components/PhotoGallery.css */
+.photo-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Responsive grid */
+  grid-gap: 16px; /* Spacing between grid items */
+}
+
+.photo-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Remove fixed width for responsive behavior */
+}
+
+.photo-details {
+  margin-top: 8px;
+}

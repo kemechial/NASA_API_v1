@@ -1,0 +1,16 @@
+# Use a Python image for the backend
+FROM python:3.9
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the backend code
+COPY backend/requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+COPY backend/ .
+
+# Expose the port the app runs on
+EXPOSE 3030
+
+# Command to run the backend
+CMD ["python", "app.py"]
