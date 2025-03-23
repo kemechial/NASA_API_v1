@@ -1,0 +1,44 @@
+# Backend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-dpl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-label
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend-container
+        image: kemechial/nasa-api-backend:v1
+        ports:
+        - containerPort: 3030
+
+---
+
+# Frontend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-dpl
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend-label
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend-container
+        image: kemechial/nasa-api-frontend:v1
+        ports:
+        - containerPort: 80
+
