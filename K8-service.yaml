@@ -6,7 +6,7 @@ metadata:
   name: backend
 spec:
   selector:
-    app: backend-label
+    app: backend
   ports:
     - protocol: TCP
       port: 3030
@@ -21,7 +21,7 @@ metadata:
   name: frontend
 spec:
   selector:
-    app: frontend-label
+    app: frontend
   ports:
     - protocol: TCP
       port: 8080
