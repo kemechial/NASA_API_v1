@@ -4,3 +4,5 @@ config.js
 __pycache__
 .flaskenv
 node_modules
+*95.json
+configmap.yaml
