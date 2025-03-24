@@ -6,3 +6,4 @@ __pycache__
 node_modules
 *95.json
 configmap.yaml
+*.pyc
