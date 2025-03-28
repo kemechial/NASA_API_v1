@@ -1,16 +1,22 @@
-/* src/components/PhotoGallery.css */
 .photo-gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Responsive grid */
-  grid-gap: 16px; /* Spacing between grid items */
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-gap: 16px;
 }
 
 .photo-card {
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 8px;
+  background-color: #ecf7ff; /* Light blue background */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  /* Remove fixed width for responsive behavior */
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s; /* Add transition for background color */
+}
+
+.photo-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: #b2ebf2; /* Darker blue on hover */
 }
 
 .photo-details {

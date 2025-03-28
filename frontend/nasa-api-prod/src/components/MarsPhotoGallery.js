@@ -1,4 +1,3 @@
-// src/components/MarsPhotoGallery.js
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -7,15 +6,15 @@ import '../styles/PhotoGallery.css';
 
 const MarsPhotoGallery = () => {
   const [photos, setPhotos] = useState([]);
-  const [loading, setLoading] = useState(true); // Add loading state
-  const [error, setError] = useState(null); // Add error state
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPhotos = async () => {
-      setLoading(true); // Set loading to true before fetching
-      setError(null); // Clear any previous errors
+      setLoading(true);
+      setError(null);
 
       const searchParams = new URLSearchParams(location.search);
       const params = {
@@ -33,7 +32,7 @@ const MarsPhotoGallery = () => {
         console.error('Error fetching photos:', error);
         setError('An error occurred while fetching photos. Please try again later.');
       } finally {
-        setLoading(false); // Set loading to false after fetching, regardless of success or failure
+        setLoading(false);
       }
     };
 
@@ -45,26 +44,30 @@ const MarsPhotoGallery = () => {
   };
 
   if (loading) {
-    return <p>Loading photos...</p>; // Display loading message
+    return <p className="text-center">Loading photos...</p>;
   }
 
   if (error) {
-    return <p className="error">{error}</p>; // Display error message
+    return <p className="text-danger text-center">{error}</p>;
   }
 
   return (
-    <div>
-      <button onClick={handleGoBack}>Go Back</button>
-      <h2>Mars Rover Photos</h2>
+    <div className="container mt-4">
+      <div className="d-flex flex-column align-items-center mb-4">
+        <h1>Mars Rover Photo Fetcher</h1>
+        <button className="btn btn-secondary mt-2" onClick={handleGoBack}>Go Back</button>
+      </div>
 
       {photos.length > 0 ? (
-        <div className="photo-gallery">
+        <div className="row">
           {photos.map((photo) => (
-            <PhotoCard key={photo.id} photo={photo} />
+            <div key={photo.id} className="col-md-4 mb-4">
+              <PhotoCard photo={photo} />
+            </div>
           ))}
         </div>
       ) : (
-        <p>No photos found for your search criteria. Please try different parameters.</p>
+        <p className="text-center">No photos found for your search criteria. Please try different parameters.</p>
       )}
     </div>
   );
