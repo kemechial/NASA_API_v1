@@ -1,22 +1,17 @@
-
-# Create a Compute Engine instance named control-server
 resource "google_compute_instance" "control-server" {
-  name         = "control-vm2"   # Replace with your desired instance name
-  machine_type = "e2-micro"      # Replace with your desired machine type
-  zone         = "us-central1-b" # Replace with your desired zone
+  name         = "gke-control"
+  machine_type = "e2-micro"
+  zone         = "us-central1-b"
 
   boot_disk {
     initialize_params {
-      image = "ubuntu-os-cloud/ubuntu-2204-lts" # Using Ubuntu 22.04 LTS
+      image = "ubuntu-os-cloud/ubuntu-2204-lts"
     }
   }
 
   network_interface {
-    network = "default" # Use the default network or create a custom one
-    # Optional: Assign an external IP address
-    access_config {
-      # Ephemeral external IP
-    }
+    network = "default"
+    access_config {}
   }
 
   service_account {
@@ -24,15 +19,11 @@ resource "google_compute_instance" "control-server" {
     scopes = ["cloud-platform"]
   }
 
-
-  # Optional: Add metadata
   metadata = {
-    foo = "bar"
-    #startup-script = file("./startup.sh") # Use a local file
-    ssh-keys = "kaanevran:${file("~/.ssh/gcp-vm-key.pub")}" # Use an SSH key
+    foo      = "bar"
+    ssh-keys = "kaanevran:${file("~/.ssh/gcp-vm-key.pub")}"
   }
 
-  # Optional: Add tags
   tags = ["web", "http-server", "ssh-access"]
 
   provisioner "file" {
@@ -41,47 +32,49 @@ resource "google_compute_instance" "control-server" {
 
     connection {
       type        = "ssh"
-      user        = "kaanevran"               # Replace with the username for the VM
-      private_key = file("~/.ssh/gcp-vm-key") # Path to your private SSH key
+      user        = "kaanevran"
+      private_key = file("~/.ssh/gcp-vm-key")
       host        = self.network_interface.0.access_config.0.nat_ip
     }
   }
+}
 
+resource "null_resource" "copy_yaml_files" {
   for_each = fileset("./yaml_files/", "*")
 
   provisioner "file" {
     source      = "./yaml_files/${each.value}"
     destination = "/tmp/${each.value}"
 
-     connection {
+    connection {
       type        = "ssh"
-      user        = "kaanevran"               # Replace with the username for the VM
-      private_key = file("~/.ssh/gcp-vm-key") # Path to your private SSH key
-      host        = self.network_interface.0.access_config.0.nat_ip
+      user        = "kaanevran"
+      private_key = file("~/.ssh/gcp-vm-key")
+      host        = google_compute_instance.control-server.network_interface.0.access_config.0.nat_ip
     }
   }
 
+  depends_on = [google_compute_instance.control-server]
+}
 
+resource "null_resource" "run_startup_script" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/startup.sh",
-      #"sudo /tmp/startup.sh > /tmp/startup.log 2>&1"  # Redirect stderr to stdout
-      "echo 'test'"
-
+      "sudo /tmp/startup.sh > /tmp/startup.log 2>&1"
     ]
 
     connection {
       type        = "ssh"
-      user        = "kaanevran"               # Replace with the username for the VM
-      private_key = file("~/.ssh/gcp-vm-key") # Path to your private SSH key
-      host        = self.network_interface.0.access_config.0.nat_ip
+      user        = "kaanevran"
+      private_key = file("~/.ssh/gcp-vm-key")
+      host        = google_compute_instance.control-server.network_interface.0.access_config.0.nat_ip
     }
   }
 
+  depends_on = [null_resource.copy_yaml_files]
 }
 
-
-# Optional: Output the instance's external IP address
 output "instance_external_ip" {
   value       = google_compute_instance.control-server.network_interface.0.access_config.0.nat_ip
   description = "The external IP address of the instance"
