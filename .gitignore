@@ -8,3 +8,9 @@ node_modules
 configmap.yaml
 *.pyc
 *.txt
+*key.json
+secret.yaml
+.terraform
+*.tfstate
+*.hcl
+*backup

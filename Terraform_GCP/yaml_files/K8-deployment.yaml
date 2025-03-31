@@ -1,0 +1,61 @@
+# Backend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  strategy: # Added strategy for rolling updates
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1 # Number of pods that can be created above the desired number
+      maxUnavailable: 0 # Number of pods that can be unavailable during the update
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend-container
+        image: kemechial/nasa-api-backend:v2 # Replace with your image and tag
+        imagePullPolicy: Always # Ensure the latest image is pulled
+        ports:
+         - containerPort: 3030
+        env:
+        - name: NASA_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: nasa-api-secret # More descriptive secret name
+              key: api-key # More descriptive key name
+
+---
+
+# Frontend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  strategy: # Added strategy for rolling updates
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend-container
+        image: kemechial/nasa-api-frontend:v3 # Replace with your image and tag
+        imagePullPolicy: Always # Ensure the latest image is pulled
+        ports:
+        - containerPort: 80
