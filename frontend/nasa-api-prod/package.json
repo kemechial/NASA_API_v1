@@ -1,7 +1,7 @@
 {
   "name": "nasa-api-prod",
   "version": "0.1.0",
-  "proxy": "http://localhost:3030",
+  "proxy": "http://backend:3030",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
