@@ -41,7 +41,7 @@ def get_apod():
         return jsonify(data), 500
     return jsonify(data)
 
-@app.route('/mars-photos/<rover_name>', methods=['GET'])
+@app.route('/api/mars-photos/<rover_name>', methods=['GET'])
 def get_mars_photos(rover_name):
     logger.info(f"Incoming request URL: {request.url}")
     print(rover_name)
